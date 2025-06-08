@@ -24,6 +24,9 @@ for (const lane of lanes) {
     outputbody.appendChild(row);
 }
 calculate.addEventListener('click', () => {
+    for (const row of outputbody.rows) {
+        row.style.backgroundColor = '';
+    }
     const dist = parseFloat(distance.value);
     if (isNaN(dist) || dist <= 0) {
         alert('Please enter a valid positive number for distance.');
@@ -46,6 +49,8 @@ calculate.addEventListener('click', () => {
     }
     // Output the converted distance
     console.log(`Converted distance: ${convertedDistance} meters`);
+    let bestDeltaIdx = -1;
+    let previousDelta = Infinity;
     const tracksplit = Number(split.value);
     for (const [idx, lane] of lanes.entries()) {
         const laps = convertedDistance / lane.length;
@@ -57,6 +62,12 @@ calculate.addEventListener('click', () => {
         distanceCell.textContent = `${nearestSplit.toFixed(2)} laps`;
         ranCell.textContent = `${(nearestSplit * lane.length).toFixed(2)} m`;
         const delta = (nearestSplit * lane.length) - convertedDistance;
+        if (Math.abs(delta) < Math.abs(previousDelta)) {
+            bestDeltaIdx = idx;
+            previousDelta = delta;
+        }
         deltaCell.textContent = `${delta.toFixed(2)} m (${(delta / lane.length * 100).toFixed(2)}%)`;
     }
+    const bestRow = outputbody.rows[bestDeltaIdx];
+    bestRow.style.backgroundColor = 'lightgreen';
 });
