@@ -1,0 +1,73 @@
+<style>
+    #distance-input {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    #doc {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        gap: 10rem;
+    }
+
+    table {
+        background-color: #f9f9f9;
+        border-collapse: collapse;
+        width: 50%;
+        margin: 20px auto;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    table tr > td:nth-child(-n+2) {
+      background-color: lightgrey;
+    }
+
+    th {
+        background-color: lightgrey;
+        padding: 12px;
+        text-align: center;
+    }
+
+    th, td {
+        border: 2px solid black;
+        padding: 12px;
+        text-align: center;
+    }
+</style>
+
+<div id="doc">
+    <div id="distance-input">
+        <label for="distance">Distance:</label>
+        <input id="distance" type="number" value="2000" min="0" max="1000" step="1">
+        <label for="unit">Unit:</label>
+        <select id="unit">
+            <option value="m">Meters</option>
+            <option value="km">Kilometers</option>
+            <option value="mi">Miles</option>
+        </select>
+        <label for="split">Markings or split:</label>
+        <input id="split" type="number" value="4" min="1" max="4" step="1">
+        <label for="lane">Lane:</label>
+        <button id="calculate">Calculate</button>
+    </div>
+
+    <div id="output">
+        <table>
+            <thead>
+                <tr>
+                    <th>Lane</th>
+                    <th>Lane distance</th>
+                    <th>Converted laps</th>
+                    <th>Distance Ran</th>
+                    <th>Delta</th>
+                </tr>
+            </thead>
+            <tbody id="outputbody"></tbody>
+    </div>
+</div>
+
+<script src="index.js"></script>
