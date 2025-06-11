@@ -1,17 +1,18 @@
 <style>
-    #distance-input {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
     #doc {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        height: 100vh;
         gap: 10rem;
+        flex-wrap: wrap;
+    }
+
+    #distanceinput {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
     }
 
     table {
@@ -40,20 +41,24 @@
 </style>
 
 <div id="doc">
-    <div id="distance-input">
-        <label for="distance">Distance:</label>
-        <input id="distance" type="number" value="2000" min="0" max="1000" step="1">
+    <form id="distanceinput">
+        <label for="distance">Target distance:</label>
+        <input id="distance" type="number" value="2000" min="0" max="10000" step="1">
         <label for="unit">Unit:</label>
         <select id="unit">
             <option value="m">Meters</option>
             <option value="km">Kilometers</option>
             <option value="mi">Miles</option>
         </select>
-        <label for="split">Markings or split:</label>
-        <input id="split" type="number" value="4" min="1" max="4" step="1">
-        <label for="lane">Lane:</label>
-        <button id="calculate">Calculate</button>
-    </div>
+        <label for="split">Closest using</label>
+        <select id="split">
+            <option value="4">Quarter laps</option>
+            <option value="2">Half laps</option>
+            <option value="1">Full laps</option>
+        </select>
+        <label for="optimize">Optimize using 400m lead markings</label>
+        <input id="optimize" type="checkbox">
+    </form>
 
     <div id="output">
         <table>
@@ -64,6 +69,7 @@
                     <th>Converted laps</th>
                     <th>Distance Ran</th>
                     <th>Delta</th>
+                    <th>Explanation</th>
                 </tr>
             </thead>
             <tbody id="outputbody"></tbody>
