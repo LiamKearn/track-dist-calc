@@ -347,10 +347,10 @@ function explainPlan(plan: CalculatedDistancePlan): string {
         const leadInDistance = plan.lane.length - 400;
         switch (plan.route) {
             case RoutePlan.LeadIn:
-                explanation += `Start at the marked lead in point of lane ${plan.lane.number} (should be ~${leadInDistance.toFixed(0)}m from the start of the lane), count laps at the start of the lane.`;
+                explanation += `Start at the marked 400m start line of lane ${plan.lane.number} (should be ~${leadInDistance.toFixed(0)}m from the start of the lane), count your laps at the start of the lane.`;
                 break;
             case RoutePlan.LeadOut:
-                explanation += `Start at the start of lane ${plan.lane.number}, count your laps at the marked the lead in point (should be ~${leadInDistance.toFixed(0)}m from the start of the lane).`;
+                explanation += `Start at the start of lane ${plan.lane.number}. Run through the marked 400m start line the first time, then count your laps at it. (should be ~${leadInDistance.toFixed(0)}m from the start of the lane).`;
                 break;
             default:
                 unreachable();
@@ -365,7 +365,7 @@ function explainPlan(plan: CalculatedDistancePlan): string {
 
 
     if (fractionalLaps > 0) {
-        explanation += ` and then ${fractionalLaps.toFixed(2)} laps (this should be ${plan.lane.length * fractionalLaps}m).`;
+        explanation += ` and then ${fractionalLaps.toFixed(2)} laps (this should be ~${(plan.lane.length * fractionalLaps).toFixed(0)}m).`;
     }
 
     const overUnder = (plan.delta === 0) ? 'exactly' : (plan.delta > 0 ? 'over' : 'under');
