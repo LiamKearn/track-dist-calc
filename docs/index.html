@@ -70,4 +70,18 @@
     </div>
 </div>
 
+<script>
+(() => {
+    if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
+        return;
+    }
+
+    setInterval(() => {
+      fetch('/reload').then(r => r.text()).then(t => {
+        if (window.last !== undefined && window.last !== t) location.reload();
+        window.last = t;
+      });
+    }, 500);
+})()
+</script>
 <script src="index.js"></script>
