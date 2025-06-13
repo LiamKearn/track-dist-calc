@@ -117,23 +117,6 @@ const lanes: Lane[] = [
     { number: 8, length: 453.030, radius: 45.24, },
 ];
 
-// Initialise the distance table
-for (const lane of lanes) {
-    const row = document.createElement('tr');
-    const laneCell = document.createElement('td');
-    laneCell.textContent = String(lanes.indexOf(lane) + 1);
-    const distanceCell = document.createElement('td');
-    distanceCell.textContent = String(lane.length);
-    row.appendChild(laneCell);
-    row.appendChild(distanceCell);
-    // Placeholders
-    row.appendChild(document.createElement('td'));
-    row.appendChild(document.createElement('td'));
-    row.appendChild(document.createElement('td'));
-    row.appendChild(document.createElement('td'));
-    outputbody.appendChild(row);
-}
-
 function normalizeToDistanceUnit<U extends DistanceUnit>(destinationUnit: U, srcDistance: Distance<DistanceUnit>): Distance<U> {
     if (srcDistance.unit === destinationUnit) {
         return srcDistance as Distance<U>;
@@ -372,11 +355,30 @@ function explainPlan(plan: CalculatedDistancePlan): string {
     return explanation + `\nYou will have run ${plan.distanceRan.toFixed(2)}m in total, which is ${plan.delta.toFixed(2)}m (${plan.deltaPercentage.toFixed(2)}%) ${overUnder} your target distance of ${plan.distance.value} ${plan.distance.unit}${unitPluralSuffixMap[plan.distance.unit]}.`;
 }
 
-distance.addEventListener('input', renderAndCalculateBestLane);
-unit.addEventListener('change', renderAndCalculateBestLane);
-split.addEventListener('change', renderAndCalculateBestLane);
-optimize.addEventListener('change', renderAndCalculateBestLane);
-distanceinput.addEventListener('submit', (e) => {
-    e.preventDefault();
-    renderAndCalculateBestLane();
+document.addEventListener("DOMContentLoaded", () => {
+    // Initialise the distance table
+    for (const lane of lanes) {
+        const row = document.createElement('tr');
+        const laneCell = document.createElement('td');
+        laneCell.textContent = String(lanes.indexOf(lane) + 1);
+        const distanceCell = document.createElement('td');
+        distanceCell.textContent = String(lane.length);
+        row.appendChild(laneCell);
+        row.appendChild(distanceCell);
+        // Placeholders
+        row.appendChild(document.createElement('td'));
+        row.appendChild(document.createElement('td'));
+        row.appendChild(document.createElement('td'));
+        row.appendChild(document.createElement('td'));
+        outputbody.appendChild(row);
+    }
+
+    distance.addEventListener('input', renderAndCalculateBestLane);
+    unit.addEventListener('change', renderAndCalculateBestLane);
+    split.addEventListener('change', renderAndCalculateBestLane);
+    optimize.addEventListener('change', renderAndCalculateBestLane);
+    distanceinput.addEventListener('submit', (e) => {
+        e.preventDefault();
+        renderAndCalculateBestLane();
+    });
 });

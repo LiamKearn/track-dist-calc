@@ -1,93 +1,130 @@
-<style>
-    #doc {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 10rem;
-        flex-wrap: wrap;
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    #distanceinput {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
+<head>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const LANE_WIDTH = 1.22
+            const SEMI_RADIUS = 36.5
+            const SEMI_DIAMETER = SEMI_RADIUS * 2
+            const STRAIGHTAWAY_LENGTH = 84.39
+            // Generate SVG path data for track.
+            //
+            // SEE: World Athletics Track and Field Facilities Manual 2019 EDITION
+            // https://yqnn.github.io/svg-path-editor/
+            let offset = 0
+            let exp_offset = 0
+            let str = ''
+            for (let i = 0; i < 8; i++) {
+                str += `M${SEMI_RADIUS} -${offset}`
+                radius = SEMI_RADIUS - offset
+                str += `l${STRAIGHTAWAY_LENGTH} 0`
+                str += `a${radius} ${radius} 0 010 ${SEMI_DIAMETER + exp_offset}`
+                str += `l-${STRAIGHTAWAY_LENGTH} 0`
+                str += `a${radius} ${radius} 0 010 -${SEMI_DIAMETER + exp_offset}`
+                str += `\n`
+                offset += LANE_WIDTH
+                exp_offset += LANE_WIDTH * 2
+            }
+            document.querySelector('path').setAttribute('d', str);
+        });
 
-    table {
-        background-color: #f9f9f9;
-        border-collapse: collapse;
-        width: 50%;
-        margin: 20px auto;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
+        (() => {
+            if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
+                return;
+            }
 
-    table tr > td:nth-child(-n+2) {
-      background-color: lightgrey;
-    }
+            setInterval(() => {
+                fetch('/reload').then(r => r.text()).then(t => {
+                    if (window.last !== undefined && window.last !== t) location.reload();
+                    window.last = t;
+                });
+            }, 500);
+        })()
+    </script>
+    <script src="index.js"></script>
+    <style>
+        #doc {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10rem;
+            flex-wrap: wrap;
+        }
 
-    th {
-        background-color: lightgrey;
-        padding: 12px;
-        text-align: center;
-    }
+        #distanceinput {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
 
-    th, td {
-        border: 2px solid black;
-        padding: 12px;
-        text-align: center;
-    }
-</style>
+        table {
+            background-color: #f9f9f9;
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-<div id="doc">
-    <form id="distanceinput">
-        <label for="distance">Target distance:</label>
-        <input id="distance" type="number" value="2000" min="0" max="10000" step="1">
-        <label for="unit">Unit:</label>
-        <select id="unit">
-            <option value="m">Meters</option>
-            <option value="km">Kilometers</option>
-            <option value="mi">Miles</option>
-        </select>
-        <label for="split">Closest using</label>
-        <select id="split">
-            <option value="4">Quarter laps</option>
-            <option value="2">Half laps</option>
-            <option value="1">Full laps</option>
-        </select>
-        <label for="optimize">Optimize using 400m lead in markings</label>
-        <input id="optimize" type="checkbox">
-    </form>
+        table tr>td:nth-child(-n+2) {
+            background-color: lightgrey;
+        }
 
-    <div id="output">
-        <table>
-            <thead>
-                <tr>
-                    <th>Lane</th>
-                    <th>Lane distance</th>
-                    <th>Converted laps</th>
-                    <th>Distance Ran</th>
-                    <th>Delta</th>
-                    <th>Explanation</th>
-                </tr>
-            </thead>
-            <tbody id="outputbody"></tbody>
+        th {
+            background-color: lightgrey;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th,
+        td {
+            border: 2px solid black;
+            padding: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="doc">
+        <form id="distanceinput">
+            <label for="distance">Target distance:</label>
+            <input id="distance" type="number" value="2000" min="0" max="10000" step="1">
+            <label for="unit">Unit:</label>
+            <select id="unit">
+                <option value="m">Meters</option>
+                <option value="km">Kilometers</option>
+                <option value="mi">Miles</option>
+            </select>
+            <label for="split">Closest using</label>
+            <select id="split">
+                <option value="4">Quarter laps</option>
+                <option value="2">Half laps</option>
+                <option value="1">Full laps</option>
+            </select>
+            <label for="optimize">Optimize using 400m lead in markings</label>
+            <input id="optimize" type="checkbox">
+        </form>
+        <div id="output">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Lane</th>
+                        <th>Lane distance</th>
+                        <th>Converted laps</th>
+                        <th>Distance Ran</th>
+                        <th>Delta</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody id="outputbody"></tbody>
+        </div>
     </div>
-</div>
+    <svg width="700" height="400" viewBox="0 -40 300 200" xmlns="http://www.w3.org/2000/svg">
+        <path fill="none" stroke="red" stroke-width="1" />
+    </svg>
+</body>
 
-<script>
-(() => {
-    if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
-        return;
-    }
-
-    setInterval(() => {
-      fetch('/reload').then(r => r.text()).then(t => {
-        if (window.last !== undefined && window.last !== t) location.reload();
-        window.last = t;
-      });
-    }, 500);
-})()
-</script>
-<script src="index.js"></script>
+</html>
