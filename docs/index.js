@@ -149,18 +149,24 @@ const renderAndCalculateBestLane = () => {
                     unreachable();
             }
         }
-        const summary = document.createElement('summary');
-        summary.textContent = 'Explain how to run';
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('popover-wrapper');
+        const button = document.createElement('button');
+        button.textContent = 'Explain how to run';
+        button.setAttribute('popovertarget', `explanation-${lane.number}`);
         const paragraph = document.createElement('p');
         paragraph.textContent = explainPlan(calculatedPlan);
-        const details = document.createElement('details');
-        details.appendChild(summary);
-        details.appendChild(paragraph);
+        const div = document.createElement('div');
+        div.setAttribute('popover', '');
+        div.setAttribute('id', `explanation-${lane.number}`);
+        div.appendChild(paragraph);
+        wrapper.appendChild(button);
+        wrapper.appendChild(div);
         if (explanationCell.firstChild) {
-            explanationCell.replaceChild(details, explanationCell.firstChild || document.createElement('div'));
+            explanationCell.replaceChild(wrapper, explanationCell.firstChild || document.createElement('div'));
         }
         else {
-            explanationCell.appendChild(details);
+            explanationCell.appendChild(wrapper);
         }
         ranCell.textContent = `${calculatedPlan.distanceRan.toFixed(2)}m`;
         deltaCell.textContent = `${calculatedPlan.delta.toFixed(2)}m (${calculatedPlan.deltaPercentage.toFixed(2)}%)`;
