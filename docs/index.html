@@ -3,100 +3,6 @@
 
 <head>
     <script>
-        function createLaneDef(laneNumber, pathData) {
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('id', `lane${laneNumber}-path`);
-            path.setAttribute('d', pathData);
-            return path;
-        }
-
-        function createLane(laneNumber) {
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-            path.setAttribute('id', `lane${laneNumber}`);
-            path.setAttribute('href', `#lane${laneNumber}-path`);
-            path.setAttribute('stroke', 'red');
-            path.setAttribute('fill', 'none');
-            path.setAttribute('stroke-width', '1');
-            return path;
-        }
-
-        function animateLane(laneNumber, laps) {
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('r', '1');
-            circle.setAttribute('fill', 'blue');
-            const animateMotion = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
-            animateMotion.setAttribute('dur', `3s`);
-            animateMotion.setAttribute('repeatCount', laps);
-            const mpath = document.createElementNS('http://www.w3.org/2000/svg', 'mpath');
-            mpath.setAttribute('href', `#lane${laneNumber}-path`);
-            animateMotion.appendChild(mpath);
-            circle.appendChild(animateMotion);
-            return circle;
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const svg = document.querySelector('svg#track');
-            const defs = document.querySelector('defs#trackdefs');
-
-            const LANE_WIDTH = 1.22
-            const SEMI_RADIUS = 36.5
-            const SEMI_DIAMETER = SEMI_RADIUS * 2
-            const STRAIGHTAWAY_LENGTH = 84.39
-
-            const lanes = 8
-            // TODO: These offsets aren't really correct to scale. Need to stare
-            // at the world aths specifications and figure it out..
-            const lane_widths = (lanes * (2 * LANE_WIDTH))
-            const vertical_offset = (lanes * (2 * LANE_WIDTH)) / 2
-            const horizontal_offset = SEMI_RADIUS + vertical_offset
-
-            // Generate SVG path data for track.
-            //
-            // SEE: World Athletics Track and Field Facilities Manual 2019 EDITION
-            // https://yqnn.github.io/svg-path-editor/
-            let offset = 0
-            let exp_offset = 0
-            let buf = ''
-            for (let i = 0; i < 8; i++) {
-                buf = ''
-                buf += `M${horizontal_offset} ${vertical_offset - offset}`
-                radius = SEMI_RADIUS - offset
-                buf += `l${STRAIGHTAWAY_LENGTH} 0`
-                buf += `a${radius} ${radius} 0 010 ${SEMI_DIAMETER + exp_offset}`
-                buf += `l-${STRAIGHTAWAY_LENGTH} 0`
-                buf += `a${radius} ${radius} 0 010 -${SEMI_DIAMETER + exp_offset}`
-                buf += `\n`
-                defs.appendChild(createLaneDef(i + 1, buf));
-                svg.appendChild(createLane(i + 1));
-                offset += LANE_WIDTH
-                exp_offset += LANE_WIDTH * 2
-            }
-
-            // `repeatEvent` and `endEvent` are not supported in safari
-            // but can later write a shim that handles this by querying the
-            // animateMotion's `getCurrentTime()` and `getSimpleDuration()`
-            // and assuming that relative to the duration, lap count and path
-            // length.
-            const laps = 2.5;
-            const s = animateLane(3, laps);
-            const a = s.querySelector('animateMotion');
-            a.addEventListener('repeatEvent', () => {
-                const lapCount = document.querySelector('#lapcount');
-                let count = parseInt(lapCount.textContent, 10);
-                count += 1;
-                lapCount.textContent = count;
-            });
-            a.addEventListener('endEvent', () => {
-                const lapCount = document.querySelector('#lapcount');
-                let count = parseInt(lapCount.textContent, 10);
-                const p = laps % 1;
-                count += (p === 0) ? 1 : p;
-                lapCount.textContent = count;
-            });
-            svg.appendChild(s);
-
-        });
-
         (() => {
             if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
                 return;
@@ -110,6 +16,7 @@
             }, 500);
         })()
     </script>
+    <script src="trackviz.js"></script>
     <script src="index.js"></script>
     <style>
         svg#track {
@@ -171,6 +78,18 @@
 </head>
 
 <body>
+    <!--
+    <p>Example of 2.5 laps in lane 3</p>
+    <p>Lap count: <span id="lapcount">0</span> <i>- broken in safari, they don't
+            support repeatEvents yet, will fix later</i></p>
+    -->
+    <ul id="splits">
+    </ul>
+    <svg id="track" viewBox="0 0 176.910 92.520" xmlns="http://www.w3.org/2000/svg">
+        <defs id="trackdefs">
+        </defs>
+    </svg>
+    <hr />
     <div id="doc">
         <form id="distanceinput">
             <label for="distance">Target distance:</label>
@@ -207,13 +126,6 @@
             </table>
         </div>
     </div>
-    <hr />
-    <p>Example of 2.5 laps in lane 3</p>
-    <p>Lap count: <span id="lapcount">0</span> <i>- broken in safari, they don't
-        support repeatEvents yet, will fix later</i></p>
-    <svg id="track" viewBox="0 0 176.910 92.520" xmlns="http://www.w3.org/2000/svg">
-        <defs id="trackdefs" />
-    </svg>
 </body>
 
 </html>
