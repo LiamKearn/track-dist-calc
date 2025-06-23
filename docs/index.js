@@ -236,7 +236,7 @@ function calculateDistancePlan(plan) {
         delta, deltaPercentage: (delta / plan.distance.value) * 100 });
 }
 function explainPlan(plan) {
-    let explanation = ``;
+    let explanation = '';
     if (!isOptimized(plan) || plan.route === RoutePlan.FullLane) {
         explanation += `Start at the start of lane ${plan.lane.number}, lap each time you reach the start of the lane.`;
     }
@@ -263,7 +263,7 @@ function explainPlan(plan) {
     const overUnder = (plan.delta === 0) ? 'exactly' : (plan.delta > 0 ? 'over' : 'under');
     return explanation + `\nYou will have run ${plan.distanceRan.toFixed(2)}m in total, which is ${plan.delta.toFixed(2)}m (${plan.deltaPercentage.toFixed(2)}%) ${overUnder} your target distance of ${plan.distance.value} ${plan.distance.unit}${unitPluralSuffixMap[plan.distance.unit]}.`;
 }
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     // Initialise the distance table
     for (const lane of lanes) {
         const row = document.createElement('tr');

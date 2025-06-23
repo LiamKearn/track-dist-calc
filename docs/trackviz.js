@@ -139,7 +139,7 @@ function animateLane(laneNumber, laps, duration, lapCB, endCB, color = 'blue') {
     return circle;
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
     const svg = document.querySelector('svg#track');
     const defs = document.querySelector('defs#trackdefs');
 

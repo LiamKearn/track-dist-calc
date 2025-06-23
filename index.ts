@@ -334,7 +334,7 @@ function calculateDistancePlan(plan: AnyLanePlan): CalculatedDistancePlan {
 }
 
 function explainPlan(plan: CalculatedDistancePlan): string {
-    let explanation = ``;
+    let explanation = '';
     if (!isOptimized(plan) || plan.route === RoutePlan.FullLane) {
         explanation += `Start at the start of lane ${plan.lane.number}, lap each time you reach the start of the lane.`;
     } else {
@@ -357,7 +357,6 @@ function explainPlan(plan: CalculatedDistancePlan): string {
     const fractionalLaps = plan.laps - baseLaps;
     explanation += `Now run ${baseLaps} laps (this should be ~${(plan.lane.length * baseLaps).toFixed(0)}m)`;
 
-
     if (fractionalLaps > 0) {
         explanation += ` and then ${fractionalLaps.toFixed(2)} laps (this should be ~${(plan.lane.length * fractionalLaps).toFixed(0)}m).`;
     }
@@ -366,7 +365,7 @@ function explainPlan(plan: CalculatedDistancePlan): string {
     return explanation + `\nYou will have run ${plan.distanceRan.toFixed(2)}m in total, which is ${plan.delta.toFixed(2)}m (${plan.deltaPercentage.toFixed(2)}%) ${overUnder} your target distance of ${plan.distance.value} ${plan.distance.unit}${unitPluralSuffixMap[plan.distance.unit]}.`;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     // Initialise the distance table
     for (const lane of lanes) {
         const row = document.createElement('tr');
