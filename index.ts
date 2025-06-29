@@ -145,6 +145,7 @@ function normalizeToDistanceUnit<U extends DistanceUnit>(destinationUnit: U, src
                 return { value: sourceValue * METERS_PER_MILE, unit: destinationUnit }
             }
             if (destinationUnit === DistanceUnit.Kilometers) {
+                // wrong whoops, not in use but fix
                 return { value: sourceValue * METERS_PER_KILOMETER, unit: destinationUnit }
             }
             unreachable();
