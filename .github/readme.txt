@@ -1,3 +1,5 @@
+TODO: Full tracksplit cannot be lead in because the standard world athletics markings don't have 400m lead ins on each quarter or half.
+
 TO DEVELOP
 - `./watch.sh &`
 - `php -S localhost:8000 &` or `python -m http.server 8000 &`
